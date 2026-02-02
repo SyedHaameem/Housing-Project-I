@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>House Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>House Price Prediction</h2>
+
+    <input id="median_income" placeholder="Median Income">
+    <input id="total_rooms" placeholder="Total Rooms">
+    <input id="total_bedrooms" placeholder="Total Bedrooms">
+    <input id="population" placeholder="Population">
+    <input id="households" placeholder="Households">
+    <input id="housing_median_age" placeholder="Housing Median Age">
+    <input id="longitude" placeholder="Longitude">
+    <input id="latitude" placeholder="Latitude">
+
+    <select id="ocean_proximity">
+        <option value="INLAND">INLAND</option>
+        <option value="NEAR OCEAN">NEAR OCEAN</option>
+        <option value="NEAR BAY">NEAR BAY</option>
+        <option value="<1H OCEAN">&lt;1H OCEAN</option>
+        <option value="ISLAND">ISLAND</option>
+    </select>
+
+    <button onclick="predict()">Predict Price</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    async function predict() {
+        alert("Clicked");
+        const data = {
+            median_income: parseFloat(document.getElementById("median_income").value),
+            total_rooms: parseFloat(document.getElementById("total_rooms").value),
+            total_bedrooms: parseFloat(document.getElementById("total_bedrooms").value),
+            population: parseFloat(document.getElementById("population").value),
+            households: parseFloat(document.getElementById("households").value),
+            housing_median_age: parseFloat(document.getElementById("housing_median_age").value),
+            longitude: parseFloat(document.getElementById("longitude").value),
+            latitude: parseFloat(document.getElementById("latitude").value),
+            ocean_proximity: document.getElementById("ocean_proximity").value
+        };
+
+        const response = await fetch("http://127.0.0.1:8000/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        document.getElementById("result").innerText =
+            "Predicted Price: $" + result.predicted_price.toFixed(2);
+    }
+</script>
+
+</body>
+</html>
