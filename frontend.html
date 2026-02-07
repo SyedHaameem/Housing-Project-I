@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f4f6f8;
+            background: #f959b1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -14,7 +14,7 @@
         }
 
         .card {
-            background: white;
+            background: rgb(160, 237, 169);
             padding: 25px;
             width: 400px;
             border-radius: 10px;
@@ -32,7 +32,7 @@
         }
 
         button {
-            background: #007bff;
+            background: #090909;
             color: white;
             border: none;
             cursor: pointer;
@@ -67,7 +67,7 @@
         <option value="INLAND">INLAND</option>
         <option value="NEAR OCEAN">NEAR OCEAN</option>
         <option value="NEAR BAY">NEAR BAY</option>
-        <option value="<1H OCEAN">&lt;1H OCEAN</option>
+        <option value="1H OCEAN">&lt;1H OCEAN</option>
         <option value="ISLAND">ISLAND</option>
     </select>
 
@@ -76,9 +76,12 @@
     <div class="result" id="result"></div>
 </div>
 
+
 <script>
-    async function predict() {
-        alert("Clicked");
+async function predict() {
+    //alert("Clicked");
+
+    try {
         const data = {
             median_income: parseFloat(document.getElementById("median_income").value),
             total_rooms: parseFloat(document.getElementById("total_rooms").value),
@@ -91,19 +94,28 @@
             ocean_proximity: document.getElementById("ocean_proximity").value
         };
 
-        const response = await fetch("http://127.0.0.1:8000/predict", {
+        const response = await fetch("/predict", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         });
 
+        if (!response.ok) throw new Error("Server error");
+
         const result = await response.json();
+
         document.getElementById("result").innerText =
             "Predicted Price: $" + result.predicted_price.toFixed(2);
+
+    } catch (err) {
+        console.error(err);
+        document.getElementById("result").innerText =
+            "Error: check console";
     }
+}
 </script>
+
+
 
 </body>
 </html>

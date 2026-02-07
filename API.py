@@ -60,9 +60,9 @@ def predict(data:HouseInput):
 
     prediction = model.predict(features)[0]
 
-    return {"predicted_ Price": prediction}
+    return {"predicted_price": float(prediction)}
 
-@app.get("/")
+@app.get("/",response_class=HTMLResponse)
 def home():
     with open("frontend.html","r" , encoding= "utf-8") as f:
 
